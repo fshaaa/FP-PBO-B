@@ -5,7 +5,7 @@ Dosen :  Abdul Munif, S.Kom., M.Sc.
 
 Anggota Kelompok :
 1. Muhammad Fath Mushaffa Azhar - 5025201051
-2. Ezekiel MAashal Wicaksono - 5025201140
+2. Ezekiel Mashal Wicaksono - 5025201140
 3. Ahmad Hafiz Mahardika - 5025201196
 4. Tengku Fredly Reinaldo - 5025201198
 
