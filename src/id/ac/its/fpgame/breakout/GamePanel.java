@@ -1,15 +1,17 @@
 package id.ac.its.fpgame.breakout;
 
 import javax.swing.*;
+
+import id.ac.its.fpgame.breakout.LevelPanel.Click;
+
 import javax.sound.sampled.*;
 import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.event.*;
-import java.awt.event.KeyEvent;
 
 public class GamePanel extends JPanel implements Interface {
-	
+
 	JLabel score;
 	JButton oneClick;
 	Timer timer;
@@ -22,6 +24,7 @@ public class GamePanel extends JPanel implements Interface {
     String highScore = "";
     int scoreCount = 0;
     boolean start = false;
+    static int level = 1;
     
     public GamePanel() {
     	setLayout(null);
@@ -48,7 +51,7 @@ public class GamePanel extends JPanel implements Interface {
     
     void initGame() {
 	    ball = new Ball();
-	    paddle = new Paddle();
+	    paddle = new Paddle(level);
 	    playing = true;
 	    			
 	    addMouseMotionListener(paddle.getMouseHandler());
@@ -198,4 +201,8 @@ public class GamePanel extends JPanel implements Interface {
             }
         }
     }
+	
+	public static void setLevel(int newlevel) {
+		level = newlevel; 
+	}
 }
