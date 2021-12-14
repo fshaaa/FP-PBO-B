@@ -1,55 +1,69 @@
 package id.ac.its.fpgame.breakout;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.sound.sampled.*;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-
+import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.awt.event.*;
+import java.awt.event.KeyEvent;
 
 public class GamePanel extends JPanel implements Interface {
-    Timer timer;
-    String message;
+	
+	JLabel score;
+	JButton oneClick;
+	Timer timer;
+    String message = "";
     Ball ball;
     Paddle paddle;
     Brick bricks[];
     int bricksRemaining;
-    boolean playing = true;
-    
+    boolean playing;
+    String highScore = "";
+    int scoreCount = 0;
+    boolean start = false;
     
     public GamePanel() {
+    	setLayout(null);
+    	setFocusable(true);
         setBackground(new Color(64, 64, 64));
         setDoubleBuffered(true);
-        setFocusable(true);
-		//setLocationRelativeTo(null);
-		//setResizable(false);
-		//setSize(Interface.WIDTH + 10, Interface.HEIGHT + 10);
-		//setIgnoreRepaint(true);
-		//setVisible(true);
-        initGame();
+        
+        score = new JLabel ("Score: 0");
+        score.setBounds(10, 10, 100, 20);
+        score.setForeground(Color.WHITE);
+        score.setFont(new Font("Roboto", Font.BOLD, 16));
+        add(score);
+        
+        oneClick = new JButton("Click to Start");
+        oneClick.setFocusPainted(false);
+        oneClick.setBorderPainted(false);
+        oneClick.setContentAreaFilled(false);
+        oneClick.setForeground(Color.GRAY);
+        oneClick.setFont(new Font("Roboto", Font.BOLD, 20));
+        oneClick.setBounds(30, 50, 400, 500);
+        add(oneClick);
+        oneClick.addMouseListener(new Click());
     }
     
     void initGame() {
-        ball = new Ball(); 
-        paddle = new Paddle(); 
-        
-        addMouseMotionListener(paddle.getMouseHandler());
-
-        bricks = new Brick[63];
-        bricksRemaining = 0;
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 9; j++) {
-                bricks[bricksRemaining++] = new Brick(55 + j * 40, 48 + i * 12);
-            }
-        }
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new GameLoopTask(), 1000, 17);
+	    ball = new Ball();
+	    paddle = new Paddle();
+	    playing = true;
+	    			
+	    addMouseMotionListener(paddle.getMouseHandler());
+	        
+	    bricks = new Brick[63];
+	      bricksRemaining = 0;
+	      for (int i = 0; i < 7; i++) {
+	        for (int j = 0; j < 9; j++) {
+	            bricks[bricksRemaining++] = new Brick(55 + j * 40, 48 + i * 12);
+	        }
+	    }
+	    if(start) {
+	        timer = new Timer();
+	        timer.scheduleAtFixedRate(new GameLoopTask(), 1000, 17);
+    	}
     }
     
     void stopGame() {
@@ -78,7 +92,7 @@ public class GamePanel extends JPanel implements Interface {
         
         for (Brick brick : bricks) {
             if ((brick.destroyed == false) &&
-                    (brick.getRect().intersects(ball.getRect()))) {
+                (brick.getRect().intersects(ball.getRect()))) {
                 playSound(Interface.SOUND_PING);
                 
                 int top = ball.getY();
@@ -86,23 +100,25 @@ public class GamePanel extends JPanel implements Interface {
                 int left = ball.getX();
                 int right = ball.getX() + ball.getWidth();
                 
-                if (brick.getRect().contains(right + 1, top)) {
+                if (brick.getRect().contains(right, top)) {
                     int dx = ball.getDx();
                     ball.setDx(dx < 0 ? dx : -dx); 
-                } else if (brick.getRect().contains(left - 1, top)) {
+                } else if (brick.getRect().contains(left, top)) {
                     int dx = ball.getDx();
                     ball.setDx(dx < 0 ? -dx : dx); 
                 }
                 
-                if (brick.getRect().contains(left, top - 1)) {
+                if (brick.getRect().contains(left, top)) {
                     int dy = ball.getDy();
                     ball.setDy(dy < 0 ? -dy : dy);
-                } else if (brick.getRect().contains(left, bottom + 1)) {
+                } else if (brick.getRect().contains(left, bottom)) {
                     int dy = ball.getDy();
                     ball.setDy(dy < 0 ? dy : -dy); 
                 }
                 brick.destroyed = true;
                 bricksRemaining--;
+                scoreCount += 10;
+                score.setText("Score: " + scoreCount);
             }
         }
     }
@@ -136,8 +152,8 @@ public class GamePanel extends JPanel implements Interface {
             g2d.setColor(Color.WHITE);
             g2d.setFont(font);
             g2d.drawString(message,
-                    Interface.WIDTH / 2 -
-                    this.getFontMetrics(font).stringWidth(message) / 2,
+            		Interface.WIDTH / 2 -
+                    this.getFontMetrics(font).stringWidth(message) / 2 - 10,
                     Interface.HEIGHT / 2);
         }
         g2d.dispose();
@@ -170,6 +186,16 @@ public class GamePanel extends JPanel implements Interface {
             clip.start();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+	class Click extends MouseAdapter{
+        public void mouseClicked(MouseEvent me){
+            if(me.getSource()== oneClick){
+            	start = true;
+            	initGame();
+            	oneClick.setVisible(false);
+            }
         }
     }
 }
