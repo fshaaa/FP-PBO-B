@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.event.*;
  
 class MenuPanel extends JPanel implements Interface{
-
+	
     JButton play = new JButton("");
     JButton about = new JButton("");
     JButton highscore = new JButton("");
@@ -44,7 +44,7 @@ class MenuPanel extends JPanel implements Interface{
 	class Click extends MouseAdapter{
         public void mouseClicked(MouseEvent me){
             if(me.getSource()== play){
-                Breakout.cl.show(Breakout.panel, "GamePanel");
+                Breakout.cl.show(Breakout.panel, "LevelPanel");
             }
             if(me.getSource()== about){
             	Breakout.cl.show(Breakout.panel, "AboutPanel");
