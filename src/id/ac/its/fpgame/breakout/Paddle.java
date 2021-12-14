@@ -8,13 +8,22 @@ public class Paddle extends Sprite implements Interface {
 
 	private MouseHandler mouseHandler = null;
 	
-	public Paddle() {
-		setImage(new ImageIcon(this.getClass().getResource(PIC_PADDLEEASY)).getImage());
+	public Paddle(int level) {
+		if(level == 1) {
+			setImage(new ImageIcon(
+	                this.getClass().getResource(Interface.PIC_PADDLEEASY)).getImage());
+		} else if(level == 2) {
+			setImage(new ImageIcon(
+	                this.getClass().getResource(Interface.PIC_PADDLEMEDIUM)).getImage());
+		} else if(level == 3) {
+			setImage(new ImageIcon(
+	                this.getClass().getResource(Interface.PIC_PADDLEHARD)).getImage());
+		}
 		reset();
 	}
 
 	private void reset() {
-		 x = (int)(Interface.WIDTH / 5);
+		 x = (Interface.WIDTH / 5);
 		 y = Interface.HEIGHT - 45;
 	}
 	
