@@ -12,11 +12,13 @@ class MenuPanel extends JPanel implements Interface{
     JButton play = new JButton("");
     JButton about = new JButton("");
     JButton highscore = new JButton("");
+    JButton exit = new JButton("");
     
-    Image menubkg = new ImageIcon (this.getClass().getResource(PIC_MENU)).getImage();
-    ImageIcon playbtn = new ImageIcon (this.getClass().getResource (PIC_PLAYBUTTON));
-    ImageIcon aboutbtn = new ImageIcon (this.getClass().getResource (PIC_ABOUTBUTTON));
+    Image menubkg = new ImageIcon(this.getClass().getResource(PIC_MENU)).getImage();
+    ImageIcon playbtn = new ImageIcon(this.getClass().getResource (PIC_PLAYBUTTON));
+    ImageIcon aboutbtn = new ImageIcon(this.getClass().getResource (PIC_ABOUTBUTTON));
     ImageIcon highscorebtn = new ImageIcon(this.getClass().getResource(PIC_HIGHSCOREBUTTON));
+    ImageIcon exitbtn = new ImageIcon(this.getClass().getResource(PIC_EXIT));
     
     MenuPanel(){
     	setLayout(null);
@@ -24,6 +26,7 @@ class MenuPanel extends JPanel implements Interface{
         play.setIcon(playbtn);
         about.setIcon(aboutbtn);
         highscore.setIcon(highscorebtn);
+        exit.setIcon(exitbtn);
         
         play.setBounds(170, 280, 130, 50);
         play.setVisible(true);
@@ -31,14 +34,18 @@ class MenuPanel extends JPanel implements Interface{
         about.setVisible(true);
         highscore.setBounds(170, 390, 130, 50);
         highscore.setVisible(true);
+        exit.setBounds(170, 445, 130, 50);
+        exit.setVisible(true);
         
         add(play);
         add(about);
         add(highscore);
+        add(exit);
                 
         play.addMouseListener(new Click());
         about.addMouseListener(new Click());
         highscore.addMouseListener(new Click());
+        exit.addMouseListener(new Click());
     }
 
 	class Click extends MouseAdapter{
@@ -51,6 +58,9 @@ class MenuPanel extends JPanel implements Interface{
             }
             if(me.getSource()== highscore){
             	Breakout.cl.show(Breakout.panel, "HighscorePanel");
+            }
+            if(me.getSource()== exit){
+            	System.exit(0);
             }
         }
     }
