@@ -6,15 +6,14 @@ public class Ball extends Sprite implements Interface{
 	
 	public Ball() {
 		dx = 2;
-		dy = 2;
-		
+		dy = -2;
 		setImage(new ImageIcon(
                 this.getClass().getResource(Interface.PIC_BALL)).getImage());
 		reset();
 	}
 
 	private void reset() {
-		x = Interface.WIDTH / 5;
+		x = (int)(Interface.WIDTH / 2.5);
 		y = Interface.HEIGHT - 45;
 	}
 	
@@ -26,8 +25,8 @@ public class Ball extends Sprite implements Interface{
 			x = 0;
 			dx = -dx;
 		} 
-		else if(x >= Interface.WIDTH - width) {
-			x = Interface.WIDTH - width;
+		else if(x >= Interface.WIDTH - width - 15) {
+			x = Interface.WIDTH - width - 15;
 			dx = -dx;
 		}
 		
