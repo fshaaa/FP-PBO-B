@@ -17,4 +17,11 @@ public interface Interface {
 	public static final String PIC_HIGHSCOREBUTTON = "highscoreButton.png";
 	public static final String PIC_ABOUT = "about.png";
 	public static final String PIC_BACK = "back.png";
+	public static final String PIC_LEVEL = "level.png";
+	public static final String PIC_EASY = "easy.png";
+	public static final String PIC_MEDIUM = "medium.png";
+	public static final String PIC_HARD = "hard.png";
+	public static final String PIC_HIGHSCORE = "highscore.png";
+	public static final String PIC_RESET = "reset.png";
+	public static final String PIC_EXIT = "exit.png";
 }
