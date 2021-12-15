@@ -1,9 +1,6 @@
 package id.ac.its.fpgame.breakout;
 
 import javax.swing.*;
-
-import id.ac.its.fpgame.breakout.LevelPanel.Click;
-
 import javax.sound.sampled.*;
 import java.awt.*;
 import java.util.Timer;
@@ -13,15 +10,17 @@ import java.awt.event.*;
 public class GamePanel extends JPanel implements Interface {
 
 	JLabel score;
+	JLabel highscore;
 	JButton oneClick;
+	JButton back;
 	Timer timer;
     String message = "";
+    String hs = "";
     Ball ball;
     Paddle paddle;
     Brick bricks[];
     int bricksRemaining;
     boolean playing;
-    String highScore = "";
     int scoreCount = 0;
     boolean start = false;
     static int level = 1;
@@ -32,11 +31,17 @@ public class GamePanel extends JPanel implements Interface {
         setBackground(new Color(64, 64, 64));
         setDoubleBuffered(true);
         
-        score = new JLabel ("Score: 0");
-        score.setBounds(10, 10, 100, 20);
+        score = new JLabel ("Score: " + scoreCount);
+        score.setBounds(20, 10, 100, 20);
         score.setForeground(Color.WHITE);
         score.setFont(new Font("Roboto", Font.BOLD, 16));
         add(score);
+        
+        highscore = new JLabel ("Highscore: " + getHighScore());
+        highscore.setBounds(320, 10, 150, 20);
+        highscore.setForeground(Color.WHITE);
+        highscore.setFont(new Font("Roboto", Font.BOLD, 16));
+        add(highscore);
         
         oneClick = new JButton("Click to Start");
         oneClick.setFocusPainted(false);
@@ -44,7 +49,7 @@ public class GamePanel extends JPanel implements Interface {
         oneClick.setContentAreaFilled(false);
         oneClick.setForeground(Color.GRAY);
         oneClick.setFont(new Font("Roboto", Font.BOLD, 20));
-        oneClick.setBounds(30, 50, 400, 500);
+        oneClick.setBounds(30, 0, 400, 600);
         add(oneClick);
         oneClick.addMouseListener(new Click());
     }
@@ -53,7 +58,8 @@ public class GamePanel extends JPanel implements Interface {
 	    ball = new Ball();
 	    paddle = new Paddle(level);
 	    playing = true;
-	    			
+	    scoreCount = 0;
+	    
 	    addMouseMotionListener(paddle.getMouseHandler());
 	        
 	    bricks = new Brick[63];
@@ -62,7 +68,8 @@ public class GamePanel extends JPanel implements Interface {
 	        for (int j = 0; j < 9; j++) {
 	            bricks[bricksRemaining++] = new Brick(55 + j * 40, 48 + i * 12);
 	        }
-	    }
+	      }
+	     
 	    if(start) {
 	        timer = new Timer();
 	        timer.scheduleAtFixedRate(new GameLoopTask(), 1000, 17);
@@ -70,8 +77,21 @@ public class GamePanel extends JPanel implements Interface {
     }
     
     void stopGame() {
-        playing = false;
+    	score.setText("Score: 0");
+    	score.setVisible(false);
+    	highscore.setVisible(false);
+        playing = false; 
         timer.cancel();
+        back = new JButton("Click for Menu");
+        back.setFocusPainted(false);
+        back.setBorderPainted(false);
+        back.setContentAreaFilled(false);
+        back.setForeground(Color.GRAY);
+        back.setFont(new Font("Roboto", Font.BOLD, 20));
+        back.setBounds(30, 300, 400, 500);
+        back.setVisible(true);
+        add(back);
+        back.addMouseListener(new Click());
     }
     
     void handleCollisions() {
@@ -150,14 +170,18 @@ public class GamePanel extends JPanel implements Interface {
         }
 
         else {
-            Font font = new Font("Arial", Font.ITALIC, 20);
+            Font font = new Font("Roboto", Font.ITALIC, 24);
             
             g2d.setColor(Color.WHITE);
             g2d.setFont(font);
             g2d.drawString(message,
             		Interface.WIDTH / 2 -
                     this.getFontMetrics(font).stringWidth(message) / 2 - 10,
-                    Interface.HEIGHT / 2);
+                    Interface.HEIGHT / 2 + 15);
+            g2d.drawString(hs,
+            		Interface.WIDTH / 2 -
+                    this.getFontMetrics(font).stringWidth(hs) / 2 - 10,
+                    Interface.HEIGHT / 2 - 15);
         }
         g2d.dispose();
     }
@@ -169,11 +193,20 @@ public class GamePanel extends JPanel implements Interface {
             paddle.move(); 
             
             if (ball.getY() > Interface.HEIGHT) {
-                message = "Game Over";
+            	if(scoreCount > getHighScore()) {
+            		setHighScore(scoreCount);
+            		message = "Your Score: " + scoreCount;
+            		hs = "Congratulation! You Get the Highscore!";
+            	} 
+            	else {
+            		hs = "Your Score: " + scoreCount;
+            		message = "Try Again";
+            	}
                 stopGame();
             }
             else if (bricksRemaining == 0) {
-                message = "Congratulations! You won!";
+            	message = "Your Score: " + scoreCount;
+                hs = "Congratulations! You Get the Highscore!";
                 stopGame();
             }
             handleCollisions();
@@ -198,11 +231,40 @@ public class GamePanel extends JPanel implements Interface {
             	start = true;
             	initGame();
             	oneClick.setVisible(false);
+            	highscore.setText("Highscore: " + getHighScore());
+            }
+            if(me.getSource()== back){
+            	playing = true;
+            	oneClick.setVisible(true);
+                score.setVisible(true);
+            	back.setVisible(false);
+            	highscore.setVisible(true);
+            	Breakout.cl.show(Breakout.panel, "MenuPanel");
             }
         }
     }
 	
 	public static void setLevel(int newlevel) {
 		level = newlevel; 
+	}
+	
+	public static void setHighScore(int score) {
+		if(level == 1)
+			HighscorePanel.setHighscoreEasy(score);
+		else if(level == 2)
+			HighscorePanel.setHighscoreMedium(score);
+		else if(level == 3)
+			HighscorePanel.setHighscoreHard(score);
+	}
+	
+	public static int getHighScore() {
+		if(level == 1)
+			return HighscorePanel.getHighscoreEasy();
+		else if(level == 2)
+			return HighscorePanel.getHighscoreMedium();
+		else if(level == 3)
+			return HighscorePanel.getHighscoreHard();
+		else 
+			return -1;
 	}
 }
