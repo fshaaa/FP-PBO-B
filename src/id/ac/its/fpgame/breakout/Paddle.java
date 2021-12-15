@@ -23,7 +23,7 @@ public class Paddle extends Sprite implements Interface {
 	}
 
 	private void reset() {
-		 x = (Interface.WIDTH / 5);
+		 x = (int)(Interface.WIDTH / 2.5);
 		 y = Interface.HEIGHT - 45;
 	}
 	
