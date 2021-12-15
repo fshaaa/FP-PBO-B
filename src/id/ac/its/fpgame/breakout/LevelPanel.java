@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 public class LevelPanel extends JPanel implements Interface{
 	
-	    JButton back = new JButton("Back");
+	    JButton back = new JButton();
 	    JButton easy = new JButton();
 	    JButton medium = new JButton();
 	    JButton hard = new JButton();
