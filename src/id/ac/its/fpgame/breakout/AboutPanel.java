@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
 import id.ac.its.fpgame.breakout.MenuPanel.Click;
 
 public class AboutPanel extends JPanel implements Interface{
